@@ -9,14 +9,17 @@ class Pixel
         int red;
         int green;
         int blue;
+        int tag;                    /// Stores cluster ID
 
     public:
-        Pixel(int _red, int _green, int _blue);
+        Pixel(int _red, int _green, int _blue, int _tag);
         Pixel(Pixel *pixel);
 
         int getRed();
         int getGreen();
         int getBlue();
+        void setTag(int _tag);
+        int getTag();
         string getRGB();
         void setRGB(int _red, int _green, int _blue);
 };

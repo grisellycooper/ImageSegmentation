@@ -7,8 +7,7 @@ class Cluster
     private:
         Image *image;
         Pixel *centroid;
-        vector<Pixel*> pixelsList;
-
+                
     public:
         Cluster(Image *_image);
         ~Cluster();
@@ -16,7 +15,7 @@ class Cluster
         double getDistanceTo(Pixel *pixel);
         double getDistanceTo(int red, int green, int blue);
         void addPixel(Pixel *pixel);        
-        double updateCentroid();        
-        void updatePixelsList();
+        double updateCentroid(int clusterId);        
+        void updatePixelsList(int clusterId);
         void clearPixels();
 };

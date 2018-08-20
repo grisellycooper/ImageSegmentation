@@ -5,19 +5,15 @@
 
 using namespace std;
 
-Cluster::Cluster(Image *image)
+Cluster::Cluster(Image *_image)
 {
-    image = image;
+    image = _image;
     centroid = new Pixel(image->getRandomPixel()); 
 } 
 
 Cluster::~Cluster()
 {
     delete centroid;
-    for (int i = 0; i < pixelsList.size(); i++)
-    {
-        delete pixelsList[i];
-    }
 }
 
 double Cluster::getDistanceTo(Pixel *pixel)
@@ -42,48 +38,57 @@ double Cluster::getDistanceTo(int red, int green, int blue)
 
 void Cluster::addPixel(Pixel *pixel)
 {
-    pixelsList.push_back(pixel);
+    //pixelsList.push_back(pixel);
 }
 
-double Cluster::updateCentroid()
+double Cluster::updateCentroid(int clusterId)
 {
     double aRed = 0;
     double aGreen = 0;
     double aBlue = 0;
-    int listSize = pixelsList.size();
+    int imageSize = image->getImageSize();  
     double change = 0;
+    int i, count = 0;
 
-    for (int i = 0; i < listSize; i++)
+//#   pragma omp parallel for num_threads(2) default(none) reduction(+:count) private(i) shared(imageSize, clusterId, image, centroid) schedule(dynamic,10) reduction(+:count)
+    for (i = 0; i < imageSize; i++)
     {
-        aRed += pixelsList[i]->getRed();
-        aGreen += pixelsList[i]->getGreen();
-        aBlue += pixelsList[i]->getBlue();
+        if(image->getPixel(i)->getTag() == clusterId)
+        {
+            aRed += image->getPixel(i)->getRed();
+            aGreen += image->getPixel(i)->getGreen();
+            aBlue += image->getPixel(i)->getBlue();
+            count++;
+        }        
     }
 
-    if (listSize < 1)
+    if (count < 1)
     {
-        listSize = 1;
+        count = 1;
     }
 
-    aRed /= listSize;
-    aGreen /= listSize;
-    aBlue /= listSize;
-
+    aRed /= count;
+    aGreen /= count;
+    aBlue /= count;
     change = this->getDistanceTo(aRed, aGreen, aBlue);
     centroid->setRGB(aRed, aGreen, aBlue);
-
     return change;
 }
 
-void Cluster::updatePixelsList()
+void Cluster::updatePixelsList(int clusterId)
 {
-    for (int i = 0; i < pixelsList.size(); i++)
+    int i, imageSize = image->getImageSize();
+//#   pragma omp parallel for num_threads(2) default(none) private(i) shared(imageSize, clusterId, image, centroid) schedule(dynamic,10)
+    for (i = 0; i < imageSize; i++)
     {
-        pixelsList[i]->setRGB(centroid->getRed(), centroid->getGreen(), centroid->getBlue());
+        if(image->getPixel(i)->getTag() == clusterId)
+        {
+            image->getPixel(i)->setRGB(centroid->getRed(), centroid->getGreen(), centroid->getBlue());
+        }        
     }
 }
 
 void Cluster::clearPixels()
 {
-    pixelsList = {};
+   // pixelsList = {};
 }

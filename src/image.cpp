@@ -6,11 +6,12 @@
 
 using namespace std;
 
-Pixel::Pixel(int _red, int _green, int _blue)
+Pixel::Pixel(int _red, int _green, int _blue, int _tag)
 {
     red = _red;
     green = _green;
     blue = _blue;   
+    tag = _tag;
 }
 
 Pixel::Pixel(Pixel *pixel)
@@ -35,6 +36,16 @@ int Pixel::getBlue()
     return blue;
 }
 
+void Pixel::setTag(int _tag)
+{
+    tag = _tag;
+}
+
+int Pixel::getTag()
+{
+    return tag;
+}
+
 string Pixel::getRGB()
 {
     return to_string(red) + " " + to_string(green) + " " + to_string(blue);
@@ -53,7 +64,7 @@ Image::Image(int _width, int _height)
     height = _height;
     for (int i=0; i < (width*height); i++)
     {
-        pixelsList.push_back(new Pixel(0, 0, 0));
+        pixelsList.push_back(new Pixel(0, 0, 0, 0));
     }
 }
 
@@ -77,7 +88,7 @@ Image::Image(string imageDir)
                 image >> red;
                 image >> green;
                 image >> blue;
-                pixelsList.push_back(new Pixel(red, green, blue));
+                pixelsList.push_back(new Pixel(red, green, blue, 0));
             }
         } else {
             cout << "The format file must be .ppm type P3" << endl;
