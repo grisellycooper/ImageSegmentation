@@ -58,7 +58,7 @@ int main(int argc, char* argv[] )
         int i, closestClusterIndex, imageSize = image->getImageSize(); 
         double distance_pixel, distance_ccCluster;
 
-#       pragma omp parallel for num_threads(4) default(none) private(i,closestClusterIndex, distance_pixel, distance_ccCluster) shared(image,clusters,imageSize,clusterCount) schedule(dynamic,1)
+//#       pragma omp parallel for num_threads(4) default(none) private(i,closestClusterIndex, distance_pixel, distance_ccCluster) shared(image,clusters,imageSize,clusterCount) schedule(dynamic,1)
         for (i = 0; i < imageSize ; i++)
         {            
             // Compute distance from each pixel to each cluster centroid

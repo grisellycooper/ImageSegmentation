@@ -50,7 +50,7 @@ double Cluster::updateCentroid(int clusterId)
     double change = 0;
     int i, count = 0;
 
-#   pragma omp parallel for num_threads(4) default(none) reduction(+:count) private(i) shared(imageSize, clusterId, image, centroid) schedule(dynamic,10) reduction(+:count)
+//#   pragma omp parallel for num_threads(4) default(none) reduction(+:count) private(i) shared(imageSize, clusterId, image, centroid) schedule(dynamic,10) reduction(+:count)
     for (i = 0; i < imageSize; i++)
     {
         if(image->getPixel(i)->getTag() == clusterId)
@@ -78,7 +78,7 @@ double Cluster::updateCentroid(int clusterId)
 void Cluster::updatePixelsList(int clusterId)
 {
     int i, imageSize = image->getImageSize();
-#   pragma omp parallel for num_threads(4) default(none) private(i) shared(imageSize, clusterId, image, centroid) schedule(dynamic,10)
+//#   pragma omp parallel for num_threads(4) default(none) private(i) shared(imageSize, clusterId, image, centroid) schedule(dynamic,10)
     for (i = 0; i < imageSize; i++)
     {
         if(image->getPixel(i)->getTag() == clusterId)
